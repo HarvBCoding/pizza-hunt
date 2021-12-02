@@ -4,6 +4,14 @@ const pizzaController = {
   // get all pizzas
   getAllPizza(req, res) {
     Pizza.find({})
+      .populate({
+        path: 'comments',
+        // the select option is used to tell Mongoose that we don't care about the __v field, if the - wasn't there it would return only the __v field
+        select: '-__v'
+      })
+      .select('-__v')
+      // the .sort method is set to return thr pizzas in DESC order by the _id value
+      .sort({ _id: -1 })
       .then((dbPizzaData) => res.json(dbPizzaData))
       .catch((err) => {
         console.log(err);
@@ -14,6 +22,11 @@ const pizzaController = {
   // get one pizza by id
   getPizzaById({ params }, res) {
     Pizza.findOne({ _id: params.id })
+      .populate({
+        path: 'comments',
+        select: '-__v'
+      })
+      .select('-__v')
       .then((dbPizzaData) => {
         //   if no pizza is found, send 404
         if (!dbPizzaData) {
