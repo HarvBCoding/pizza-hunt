@@ -22,6 +22,35 @@ const commentController = {
       .catch((err) => res.json(err));
   },
 
+  // add reply to comment
+  addReply({ params, body }, res) {
+    Comment.findOneAndUpdate(
+      { _id: params.commentId },
+      { $push: { replies: body } },
+      { new: true }
+    )
+      .then(dbPizzaData => {
+        if (!dbPizzaData) {
+          res.status(404).json({ message: 'No pizza found with this id!' });
+          return;
+        }
+        res.json(dbPizzaData);
+      })
+      .catch(err => res.json(err));
+  },
+
+  // remove reply
+  removeReply({ params }, res) {
+    Comment.findOneAndUpdate(
+      { _id: params.commentId },
+      // the $pull operator is used to remove the specific reply from the replies array where the replyId mayches
+      { $pull: { replies: { replyId: params.replyId } } },
+      { new: true }
+    )
+      .then(dbPizzaData => res.json(dbPizzaData))
+      .catch(err => res.json(err));
+  },
+
   // remove comment
   removeComment({ params }, res) {
     // .findOneAndDelete() deletes the document while also returning it's data
