@@ -4,10 +4,14 @@ const dateFormat = require('../utils/dateFormat');
 // create schema using the schema constructor imported from Mongoose & define the fields w/ specific data types
 const PizzaSchema = new Schema({
     pizzaName: {
-        type: String
+        type: String,
+        required: "You need to provide a pizza name!",
+        trim: true
     },
     createdBy: {
-        type: String
+        type: String,
+        required: "You need to provide your name!",
+        trim: true
     },
     createdAt: {
         type: Date,
@@ -17,6 +21,9 @@ const PizzaSchema = new Schema({
     },
     size: {
         type: String,
+        required: true,
+        // enum stands for enumerable, a term that refers to a set of data that can be iterated over
+        enum: ['Personal', 'Small', 'Medium', 'Large', 'Extra Large'],
         default: 'Large'
     },
     toppings: [],
